@@ -26,26 +26,24 @@
 
 			<!-- ############### Aufgabe1a Form1 Start -->
 			<form id="tag-form" action="/tagging" method="post">
-				
-				
+
+
 				<fieldset>
-					<legend>Tagging</legend>
-					
+					<legend>Enter a GeoTag</legend>
+
 					<label for="latitude">Latitude</label>
 					<input type="text" name="latitude" id="latitude" placeholder="0.1234" required>
-					<button>Submit</button>
 					<br>
-					
+
 					<label for="longitude">Longitude</label>
 					<input type="text" name="longitude" id="longitude" placeholder="12.12344" required>
-					<button>Submit</button>
 					<br>
 					<label for="name">Name</label>
-					<input type="" name="name"	id="name" placeholder="My Favourite Place" maxlength="10" required>
-					<button>Submit</button>
+					<input type="" name="name" id="name" placeholder="My Favourite Place" maxlength="10" required>
 					<br>
 					<label for="hashtag">Hashtag</label>
-					<input type="text" name="hashtag" id="hashtag" placeholder="#MyPlace" pattern="[#]{1}[A-Za-z]?" maxlength="11">
+					<input type="text" name="hashtag" id="hashtag" placeholder="#MyPlace" pattern="(#){1}[A-Za-z]{,10}" maxlength="11">
+					<!-- TODO pattern validation -->
 					<button>Submit</button>
 					<br>
 				</fieldset>
@@ -58,7 +56,16 @@
 			<h2>Discovery</h2>
 
 			<!-- ############### Aufgabe1a Form2 Start -->
-			<form id="filter-form" action="/discovery" method="post"></form>
+			<form id="filter-form" action="/discovery" method="post">
+				<fieldset>
+					<legend>Filter by Searchterm</legend>
+					<input type="search" placeholder="Search for Location">
+					<button>Apply</button>
+					<button>Remove</button>
+					<!-- TODO hidden values übergeben -->
+				</fieldset>
+
+			</form>
 			<!-- ############### Aufgabe1a Form2 Ende -->
 
 			<div class="taglist">
