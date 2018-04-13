@@ -12,7 +12,32 @@ header {
   width: auto;
 }
 
+main {
+  overflow: auto;
+}
+
 .tagging {
   float: left;
-  min-width: 15%;
+  width: 15%;
+  margin: 0px 10px 0px;
+}
+
+.discovery {
+  float: left;
+  width: 80%;
+  margin: 0px 10px 0px;
+
+}
+
+.taglist {
+  float: left
+}
+
+.tagmap {
+  float: left;
+}
+
+
+footer {
+  clear: both;
 }
