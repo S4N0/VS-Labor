@@ -20,7 +20,6 @@
 [class*="col-"] {
   float: left;
   padding: 15px;
-  border: 1px solid red;
 }
 
 /* End Setup */
@@ -46,25 +45,43 @@ main {
 input {
   height: 2em;
   width: 10em;
-  background-color: gold;
 }
 
+.tagging {
+  min-width: 200px ;
+}
 
+.tagging input {
+  margin: 0.3em 0;
+}
+
+.tagging button, {
+  margin: 1em 0;
+}
+
+.tagging fieldset {
+  height: 300px;
+}
 
 .taglist ul {
   padding: 0px; /*Reset Bullets*/
 }
 
 .taglist ul li {
-  background-color: chartreuse;
+  background-color: rgba(0, 204, 255, 0.616);
   list-style-position: inside;
   list-style: none;
+  padding: 1em;
+  margin: 0.5em 0;
 
 }
 
-
+.tagmap img {
+  margin: 0 20%;
+}
 
 footer {
   clear: both;
   background-color: grey;
+  padding: 1.5em;
 } 
