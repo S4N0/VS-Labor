@@ -42,8 +42,7 @@
 					<input type="" name="name" id="name" placeholder="My Favourite Place" maxlength="10" required>
 					<br>
 					<label for="hashtag">Hashtag</label>
-					<input type="text" name="hashtag" id="hashtag" placeholder="#MyPlace" pattern="[A-z]*" maxlength="11">
-					<!-- TODO pattern validation -->
+					<input type="text" name="hashtag" id="hashtag" placeholder="#MyPlace" pattern="[#][A-Za-z]{1,10}" >
 					<br>
 					<button>Submit</button>
 				</fieldset>
@@ -59,9 +58,8 @@
 			<form id="filter-form" action="/discovery" method="post">
 				<fieldset>
 					<legend>Filter by Searchterm</legend>
-					<input type="search" placeholder="Search for Location">
-					<button>Apply</button>
-					<button>Remove</button>
+					<input type="search" id="search" placeholder="Search for Location">
+					<button>Submmit</button>
 					<!-- TODO hidden values übergeben -->
 				</fieldset>
 
