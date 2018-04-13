@@ -63,6 +63,10 @@ input {
   height: 300px;
 }
 
+.discovery input {
+  margin: 0.2em 0;
+}
+
 .taglist ul {
   padding: 0px; /*Reset Bullets*/
 }
@@ -73,6 +77,11 @@ input {
   list-style: none;
   padding: 1em;
   margin: 0.5em 0;
+
+}
+
+.taglist ul li:hover {
+  background-color: rgba(0, 84, 105, 0.616);
 
 }
 
