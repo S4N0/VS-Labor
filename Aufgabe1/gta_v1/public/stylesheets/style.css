@@ -12,12 +12,7 @@ header {
   width: auto;
 }
 
-/* .tagging {
-  width: 300px;
+.tagging {
   float: left;
+  min-width: 15%;
 }
-
-.discovery {
-  width: 500px;
-  float: left;
-} */
