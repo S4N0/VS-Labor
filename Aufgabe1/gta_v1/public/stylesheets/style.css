@@ -35,7 +35,7 @@ a {
 
 header {
   padding: 50px;
-  background-color:grey;
+  background-color: grey;
   width: auto;
 }
 
@@ -49,51 +49,35 @@ input {
   display: block;
 }
 
-.tagging {
-  min-width: 200px ;
-}
 
-.tagging input {
-  margin: 0.3em 0;
-}
-
-.tagging button, {
-  margin: 1em 0;
-}
-
-.tagging fieldset {
-  height: 300px;
-}
 
 .discovery input {
   margin: 0.2em 0;
   display: inline;
 }
 
+
 .taglist ul {
-  padding: 0px; /*Reset Bullets*/
+  padding: 0px; /*Reset Bullet padding*/
 }
 
 .taglist ul li {
   background-color: rgba(0, 204, 255, 0.616);
-  list-style-position: inside;
-  list-style: none;
+  list-style: none; /*Reset Bullets*/
   padding: 1em;
   margin: 0.5em 0;
 
 }
 
+/*not needed*/
 .taglist ul li:hover {
   background-color: rgba(0, 84, 105, 0.616);
 
 }
 
-.tagmap img {
-  margin: 0 20%;
-}
 
 footer {
   clear: both;
-  background-color: grey;
+  background-color: gray;
   padding: 1.5em;
 } 

@@ -36,7 +36,7 @@
 					<label for="name">Name</label>
 					<input type="" name="name" id="tag-name" placeholder="My Place" maxlength="10" required>
 					<label for="hashtag">Hashtag</label>
-					<input type="text" name="hashtag" id="tag-hashtag" placeholder="#MyPlace" pattern="[#][A-Za-z]{1,10}" >
+					<input type="text" name="hashtag" id="tag-hashtag" placeholder="#MyPlace" pattern="[#][A-Za-z]{1,10}" maxlength="11">
 					<button>Submit</button>
 				</fieldset>
 			</form>
@@ -67,7 +67,7 @@
 				</ul>
 			</div>
 
-			<div class="tagmap col-9">
+			<div class="tagmap col-4">
 				<img id="result-img" src="./images/mapview.jpg" alt="a map with locations" />
 				<div class="caption">Result map</div>
 			</div>
