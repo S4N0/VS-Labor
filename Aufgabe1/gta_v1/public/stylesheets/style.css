@@ -35,7 +35,7 @@ a {
 
 header {
   padding: 50px;
-  background-color: grey;
+  background-color: dimgray;
   width: auto;
 }
 
@@ -49,11 +49,26 @@ input {
   display: block;
 }
 
-
+.tagging {
+  min-width: 180px;
+}
 
 .discovery input {
   margin: 0.2em 0;
   display: inline;
+}
+
+button {
+  height: 2em;
+  width: 5em;
+}
+
+.tagging button {
+  margin-top: 1em;
+}
+
+.discovery button {
+  margin-left: 1em;
 }
 
 
@@ -78,6 +93,6 @@ input {
 
 footer {
   clear: both;
-  background-color: gray;
+  background-color: dimgray;
   padding: 1.5em;
 } 
