@@ -100,7 +100,12 @@ var gtaLocator = (function GtaLocator() {
 
         updateLocation: function () {
             tryLocate(function(){
-                //$()
+                $("#filter-latitude").value(getLatitude);
+                alert($("#filter.latitude").val);
+                $("#filter-longitude").value(getLongitude);
+                alert($("#filter.longitude").val);
+                
+                $("#result-img").src = getLocationMapSrc(getLatitude, getLongitude);
             }, function(){
                 alert("Ortung hat nicht funktioniert!");
             });
