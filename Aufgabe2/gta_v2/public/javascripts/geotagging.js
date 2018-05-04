@@ -73,7 +73,7 @@ var gtaLocator = (function GtaLocator() {
     var getLocationMapSrc = function (lat, lon, tags, zoom) {
         zoom = typeof zoom !== 'undefined' ? zoom : 10;
 
-        if (apiKey === "AIzaSyA8bCU6tIbzsw79ke2eTAjlHB0ZR5sMNXs") {
+        if (apiKey === "AIzaSyAysxcNUI6DusaupNUTF6dvsfJ7bRYxM_8") {
             console.log("No API key provided.");
             return "images/mapview.jpg";
         }
@@ -100,18 +100,18 @@ var gtaLocator = (function GtaLocator() {
 
         updateLocation: function () {
             tryLocate(function(){
-                $("#filter-latitude").value(getLatitude);
-                alert($("#filter.latitude").val);
-                $("#filter-longitude").value(getLongitude);
-                alert($("#filter.longitude").val);
+                $("#tag-latitude").val(getLatitude());
+                $("#tag-longitude").val(getLongitude());
+                $("#filter-latitude").val(getLatitude());
+                $("#filter-longitude").val(getLongitude());
                 
-                $("#result-img").src = getLocationMapSrc(getLatitude, getLongitude);
+                //$("#result-img").src = getLocationMapSrc(getLatitude(), getLongitude(), 1);
             }, function(){
                 alert("Ortung hat nicht funktioniert!");
             });
-
+            
         }
-
+        
     }; // ... Ende öffentlicher Teil
 })();
 
@@ -121,6 +121,6 @@ var gtaLocator = (function GtaLocator() {
  * des Skripts.
  */
 $(document).ready(function () {
-    alert("Hello World")
+    alert("Hello World");
     gtaLocator.updateLocation();
 });
