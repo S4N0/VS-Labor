@@ -113,9 +113,9 @@ var gtaLocator = (function GtaLocator() {
             }, function(msg){
                 alert(msg);
             });
-
+            
         }
-
+        
     }; // ... Ende öffentlicher Teil
 })();
 
