@@ -59,7 +59,7 @@ var gtaLocator = (function GtaLocator() {
     };
 
     // Hier Google Maps API Key eintragen
-    var apiKey = "AIzaSyA8bCU6tIbzsw79ke2eTAjlHB0ZR5sMNXs";
+    var apiKey = "AIzaSyDFfEw0_3AuFcAceGmGaNex8pKyhyIaEyA";
 
     /**
      * Funktion erzeugt eine URL, die auf die Karte verweist.
@@ -73,7 +73,7 @@ var gtaLocator = (function GtaLocator() {
     var getLocationMapSrc = function (lat, lon, tags, zoom) {
         zoom = typeof zoom !== 'undefined' ? zoom : 10;
 
-        if (apiKey === "AIzaSyA8bCU6tIbzsw79ke2eTAjlHB0ZR5sMNXs") {
+        if (apiKey === "RandomUnvalidKey...") {
             console.log("No API key provided.");
             return "images/mapview.jpg";
         }
@@ -99,15 +99,19 @@ var gtaLocator = (function GtaLocator() {
         readme: "Dieses Objekt enthält 'öffentliche' Teile des Moduls.",
 
         updateLocation: function () {
-            tryLocate(function(){
-                $("#filter-latitude").value(getLatitude);
-                alert($("#filter.latitude").val);
-                $("#filter-longitude").value(getLongitude);
-                alert($("#filter.longitude").val);
+            tryLocate(function(position){
+               
+               //ändern der value-Werte in den Formularen
+                $("#tag-latitude").val(getLatitude(position));
+                $("#tag-longitude").val(getLongitude(position));
+                $("#filter-latitude").val(getLatitude(position));
+                $("#filter-longitude").val(getLongitude(position));
                 
-                $("#result-img").src = getLocationMapSrc(getLatitude, getLongitude);
-            }, function(){
-                alert("Ortung hat nicht funktioniert!");
+                //zeigt Position auf Karte an
+                //console.log($("#result-img");
+                $("#result-img")[0].src = getLocationMapSrc(getLatitude(position), getLongitude(position),[] ,15);
+            }, function(msg){
+                alert(msg);
             });
 
         }
@@ -121,6 +125,5 @@ var gtaLocator = (function GtaLocator() {
  * des Skripts.
  */
 $(document).ready(function () {
-    alert("Hello World")
     gtaLocator.updateLocation();
 });
