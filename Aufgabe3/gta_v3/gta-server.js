@@ -29,14 +29,21 @@ app.set('view engine', 'ejs');
  * Teste das Ergebnis im Browser unter 'http://localhost:3000/'.
  */
 
-// TODO: CODE ERGÄNZEN
+// TODO: CODE ERGÄNZEN (DONE)
+app.use(express.static(__dirname + "/public"));
 
 /**
  * Konstruktor für GeoTag Objekte.
  * GeoTag Objekte sollen min. alle Felder des 'tag-form' Formulars aufnehmen.
  */
 
-// TODO: CODE ERGÄNZEN
+// TODO: CODE ERGÄNZEN (DONE ?)
+var GeoTag = function(lat, lon, name, hashtag) {
+    this.latitutde = lat;
+    this.longitutde = lon;
+    this.name = name;
+    this.hashtag = hashtag;
+}
 
 /**
  * Modul für 'In-Memory'-Speicherung von GeoTags mit folgenden Komponenten:
@@ -48,6 +55,48 @@ app.set('view engine', 'ejs');
  */
 
 // TODO: CODE ERGÄNZEN
+
+var geoTagManager = (function(){
+
+    var geoTagArray = [];
+
+    return {
+
+        add: function(geoTagObj){
+            geoTagArray.push(geoTagObj);
+        },
+
+        remove: function(name){
+        },
+
+        remove: function(){
+            
+        },
+        
+        get: function(name){
+            geoTagArray.forEach(function(obj){
+                if(obj.name == name){
+                    return obj; 
+                }
+            });
+        },
+
+        get: function(coordinate, radius){ //coordinate: Array mit [lon, lat]
+            var posLat = coordinate[0];
+            var posLon = coordinate[1];
+
+            geoTagArray.forEach(function(obj){
+                if(Math.abs((posLat-obj.lat) < radius) && (Math.abs(posLon-obj.lon) < radius)){
+                    return obj; 
+                }
+            });
+        }
+
+
+
+    }
+
+})();
 
 /**
  * Route mit Pfad '/' für HTTP 'GET' Requests.
