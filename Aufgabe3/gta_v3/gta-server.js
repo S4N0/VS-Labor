@@ -16,6 +16,7 @@ var express = require('express');
 
 var app;
 app = express();
+//Middleware Funktionen, die für Aufrufe mit express oder bestimmte Direktiven benutzt werden können (Modularisierung von Funktionen)
 app.use(logger('dev'));
 app.use(bodyParser.urlencoded({
     extended: false
@@ -37,10 +38,10 @@ app.use(express.static(__dirname + "/public"));
  * GeoTag Objekte sollen min. alle Felder des 'tag-form' Formulars aufnehmen.
  */
 
-// TODO: CODE ERGÄNZEN (DONE ?)
-var GeoTag = function(lat, lon, name, hashtag) {
-    this.latitutde = lat;
-    this.longitutde = lon;
+// TODO: CODE ERGÄNZEN (DONE)
+var GeoTag = function (lat, lon, name, hashtag) {
+    this.latitude = lat;
+    this.longitude = lon;
     this.name = name;
     this.hashtag = hashtag;
 }
@@ -56,42 +57,64 @@ var GeoTag = function(lat, lon, name, hashtag) {
 
 // TODO: CODE ERGÄNZEN
 
-var geoTagManager = (function(){
+var geoTagManager = (function () {
 
     var geoTagArray = [];
 
     return {
 
-        add: function(geoTagObj){
-            geoTagArray.push(geoTagObj);
+        add: function (tag) {
+            geoTagArray.push(tag);
         },
 
-        remove: function(name){
-        },
-
-        remove: function(){
+        removeByName: function (name) {
+            /*
+            geoTagArray.forEach(function(tag){
+                if(tag.name == name){
+                    tag = undefined;
+                    //delete geoTagArray.tag.
+                }
+            })
+            /* Variante zum Test*/
+            for(var i in geoTagArray){
+                if(geoTagArray[i].name == name){
+                    geoTagArray.splice(i,1);
+                }
+            }
             
         },
-        
-        get: function(name){
-            geoTagArray.forEach(function(obj){
-                if(obj.name == name){
-                    return obj; 
-                }
+
+        getByName: function (name) {
+            var res = [];
+            
+            geoTagArray.filter(tag => tag.name == name).forEach(function (tag) {
+                res.push(tag);
             });
+
+            return res;
         },
 
-        get: function(coordinate, radius){ //coordinate: Array mit [lon, lat]
-            var posLat = coordinate[0];
-            var posLon = coordinate[1];
+        getByRadius: function (lat, lon, radius) {
+            var posLat = lat;
+            var posLon = lon;
 
-            geoTagArray.forEach(function(obj){
-                if(Math.abs((posLat-obj.lat) < radius) && (Math.abs(posLon-obj.lon) < radius)){
-                    return obj; 
-                }
+            console.log("\n***Debug getByRadius Function***");
+            console.log("posLat/posLon: "+posLat+"/"+posLon);
+            console.log("Math.abs:"+Math.abs(200-367)+"\n***Ende***\n");
+
+            var result = geoTagArray.filter(function (tag) {
+                return (((Math.abs(posLat - tag.lat) < radius) && (Math.abs(posLon - tag.lon) < radius)));
+                //return true;
             });
-        }
 
+            return result;
+
+        },
+
+        /* returns whole array for debugging */
+        get: function () {
+            return geoTagArray
+        }
 
 
     }
@@ -107,10 +130,32 @@ var geoTagManager = (function(){
  * Als Response wird das ejs-Template ohne Geo Tag Objekte gerendert.
  */
 
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
+    var lat = req.body.latitude;
+    var lon = req.body.longitude;
+   
     res.render('gta', {
-        taglist: []
+        taglist: geoTagManager.getByRadius(lat, lon, 10),
+        lat: '',
+        lon: '',
+        tags: '[]'
     });
+});
+
+//Debugging: geoTagManager.remove
+app.get('/del', function(req, res){
+    var lat = req.body.latitude;
+    var lon = req.body.longitude;
+
+    console.log("Tag mit \'place\' wurde gelöscht");
+    geoTagManager.removeByName("place");
+    res.render('gta', {
+        taglist: geoTagManager.getByRadius(lat, lon, 10),
+        lat:000,
+        lon:000,
+        tags: "[]"
+    });
+    console.log(geoTagManager.get());
 });
 
 /**
@@ -126,7 +171,27 @@ app.get('/', function(req, res) {
  * Die Objekte liegen in einem Standard Radius um die Koordinate (lat, lon).
  */
 
-// TODO: CODE ERGÄNZEN START
+// TODO: CODE ERGÄNZEN START (DONE)
+
+app.post('/tagging', function (req, res) {
+
+    var lat = req.body.latitude;
+    var lon = req.body.longitude;
+
+    geoTagManager.add(new GeoTag(lat, lon, req.body.name, req.body.hashtag));
+
+    res.render('gta', {
+        taglist: geoTagManager.get(),//getByRadius(lat, lon, 10),
+        lat: lat,
+        lon: lon,
+        tags: JSON.stringify(geoTagManager.get())
+    });
+    console.log("place wird ausgegeben");
+    console.log("byname:"+geoTagManager.getByName("place"));
+    console.log(req.body);
+    console.log(geoTagManager.get());
+});
+
 
 /**
  * Route mit Pfad '/discovery' für HTTP 'POST' Requests.
@@ -140,7 +205,32 @@ app.get('/', function(req, res) {
  * Falls 'term' vorhanden ist, wird nach Suchwort gefiltert.
  */
 
-// TODO: CODE ERGÄNZEN
+// TODO: CODE ERGÄNZEN (DONE)
+
+app.post('/discovery', function (req, res) {
+
+    var term = req.body.searchterm;
+    var lat = req.body.latitude;
+    var lon = req.body.longitude;
+
+
+    if (term !== undefined) {
+        res.render('gta', {
+            taglist: geoTagManager.getByName(term),
+            lat: lat,
+            lon: lon,
+            tags: JSON.stringify(geoTagManager.get())
+        });
+    } else {
+        res.render('gta', {
+            taglist: geoTagManager.getByRadius(lat, lon, 10),
+            lat: lat,
+            lon: lon,
+            tags: JSON.stringify(geoTagManager.get())
+        });
+    }
+
+});
 
 /**
  * Setze Port und speichere in Express.
@@ -160,3 +250,4 @@ var server = http.createServer(app);
  */
 
 server.listen(port);
+console.log("\n-- Server läuft unter dem Port 3000 --\n");
