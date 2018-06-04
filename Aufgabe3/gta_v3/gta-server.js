@@ -55,7 +55,7 @@ var GeoTag = function (lat, lon, name, hashtag) {
  * - Funktion zum Löschen eines Geo Tags.
  */
 
-// TODO: CODE ERGÄNZEN
+// TODO: CODE ERGÄNZEN (DONE)
 
 var geoTagManager = (function () {
 
@@ -68,14 +68,7 @@ var geoTagManager = (function () {
         },
 
         removeByName: function (name) {
-            /*
-            geoTagArray.forEach(function(tag){
-                if(tag.name == name){
-                    tag = undefined;
-                    //delete geoTagArray.tag.
-                }
-            })
-            /* Variante zum Test*/
+
             for(var i in geoTagArray){
                 if(geoTagArray[i].name == name){
                     geoTagArray.splice(i,1);
@@ -98,15 +91,12 @@ var geoTagManager = (function () {
             var posLat = lat;
             var posLon = lon;
 
-            console.log("\n***Debug getByRadius Function***");
-            console.log("posLat/posLon: "+posLat+"/"+posLon);
-            console.log("Math.abs:"+Math.abs(200-367)+"\n***Ende***\n");
-
             var result = geoTagArray.filter(function (tag) {
-                return (((Math.abs(posLat - tag.lat) < radius) && (Math.abs(posLon - tag.lon) < radius)));
-                //return true;
-            });
 
+                return (((Math.abs(posLat - tag.latitude) < radius) && (Math.abs(posLon - tag.longitude) < radius)));
+                
+            });
+            
             return result;
 
         },
@@ -131,11 +121,9 @@ var geoTagManager = (function () {
  */
 
 app.get('/', function (req, res) {
-    var lat = req.body.latitude;
-    var lon = req.body.longitude;
    
     res.render('gta', {
-        taglist: geoTagManager.getByRadius(lat, lon, 10),
+        taglist: [],
         lat: '',
         lon: '',
         tags: '[]'
@@ -150,7 +138,7 @@ app.get('/del', function(req, res){
     console.log("Tag mit \'place\' wurde gelöscht");
     geoTagManager.removeByName("place");
     res.render('gta', {
-        taglist: geoTagManager.getByRadius(lat, lon, 10),
+        taglist: geoTagManager.get(),
         lat:000,
         lon:000,
         tags: "[]"
@@ -177,19 +165,16 @@ app.post('/tagging', function (req, res) {
 
     var lat = req.body.latitude;
     var lon = req.body.longitude;
+    var stdRadius = 10;
 
     geoTagManager.add(new GeoTag(lat, lon, req.body.name, req.body.hashtag));
 
     res.render('gta', {
-        taglist: geoTagManager.get(),//getByRadius(lat, lon, 10),
+        taglist: geoTagManager.getByRadius(lat, lon, stdRadius),
         lat: lat,
         lon: lon,
-        tags: JSON.stringify(geoTagManager.get())
+        tags: JSON.stringify(geoTagManager.getByRadius(lat, lon, stdRadius))
     });
-    console.log("place wird ausgegeben");
-    console.log("byname:"+geoTagManager.getByName("place"));
-    console.log(req.body);
-    console.log(geoTagManager.get());
 });
 
 
@@ -208,25 +193,25 @@ app.post('/tagging', function (req, res) {
 // TODO: CODE ERGÄNZEN (DONE)
 
 app.post('/discovery', function (req, res) {
-
     var term = req.body.searchterm;
-    var lat = req.body.latitude;
-    var lon = req.body.longitude;
+    var stdRadius = 10;
+    var lat = req.body.hiddenLatitude;
+    var lon = req.body.hiddenLongitude;
 
 
-    if (term !== undefined) {
+    if (term !== "") {
         res.render('gta', {
             taglist: geoTagManager.getByName(term),
             lat: lat,
             lon: lon,
-            tags: JSON.stringify(geoTagManager.get())
+            tags: JSON.stringify(geoTagManager.getByName(term))
         });
     } else {
         res.render('gta', {
-            taglist: geoTagManager.getByRadius(lat, lon, 10),
+            taglist: geoTagManager.getByRadius(lat, lon, stdRadius),
             lat: lat,
             lon: lon,
-            tags: JSON.stringify(geoTagManager.get())
+            tags: JSON.stringify(geoTagManager.getByRadius(lat, lon, stdRadius))
         });
     }
 

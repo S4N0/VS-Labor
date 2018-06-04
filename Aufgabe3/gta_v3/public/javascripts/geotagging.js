@@ -100,24 +100,26 @@ var gtaLocator = (function GtaLocator() {
 
         updateLocation: function () {
             if($("#tag-latitude").val() == '' || $("#tag-longitude").val() == ''){
+                console.log("trylocate wird ausgeführt");
                 tryLocate(function(position){
                   console.log(arguments);//gibt die Parameter dieser Funktion aus (existierende bei Callbacks)
-                  //ändern der value-Werte in den Formularen
-                    $("#tag-latitude").val(getLatitude(position));
-                    $("#tag-longitude").val(getLongitude(position));
-                    $("#filter-latitude").val(getLatitude(position));
-                    $("#filter-longitude").val(getLongitude(position));
-                
+                  
+                    var lat = getLatitude(position);
+                    var lon = getLongitude(position);
+
+                    
+                    $("#tag-latitude").val(lat);
+                    $("#tag-longitude").val(lon);
+                    $("#filter-latitude").val(lat);
+                    $("#filter-longitude").val(lon);
+
                     //zeigt Position auf Karte an
-                    //console.log($("#result-img");
-                    $("#result-img").attr("src", getLocationMapSrc($("#tag-latitude").val(), $("#tag-longitude").val(), JSON.parse($("#result-img").attr("data-tags"))  ,5/*15*/));
+                    //console.log($("#result-img"));
+                    $("#result-img").attr("src", getLocationMapSrc($("#tag-latitude").val(), $("#tag-longitude").val(), JSON.parse($("#result-img").attr("data-tags"))  ,15));
                 }, function(msg){
                     alert(msg);
                 });
             }
-            console.log($("#tag-latitude").val());//TODO wird nicht ausgeführt bekommt kein Wert für $(#tag..)
-            console.log("Test");
-            //JSON.parse($("#result-img").attr("data-tags"))
         }
         
     }; // ... Ende öffentlicher Teil
