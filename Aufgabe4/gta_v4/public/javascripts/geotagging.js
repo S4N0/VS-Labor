@@ -10,6 +10,40 @@ console.log("The script is going to start...");
 
 // Es folgen einige Deklarationen, die aber noch nicht ausgeführt werden ...
 
+/*Aufgabe 4 Listener, AJAX, REST*/
+
+var GeoTag = function (lat, lon, name, hashtag) {
+    this.latitude = lat;
+    this.longitude = lon;
+    this.name = name;
+    this.hashtag = hashtag;
+}
+
+var ajax = new XMLHttpRequest();
+
+$("#tag-form button").on("click", function(event){
+    
+    ajax.open("POST", "/gta_v4/gta-server.js" , true);
+
+    var lat = $("#tag-latitude").val();
+    var lon = $("#tag-longitude").val();
+    var name = $("#tag-name").val();    
+    var hashtag = $("#tag-hashtag").val();
+
+
+    ajax.send(new GeoTag(lat, lon, name, hashtag));
+
+
+});
+
+$("#filter-form button").on("click", function(event){
+
+    ajax.open("GET", "", true);
+
+});
+
+
+
 /**
  * GeoTagApp Locator Modul
  */
@@ -128,6 +162,12 @@ var gtaLocator = (function GtaLocator() {
         
     }; // ... Ende öffentlicher Teil
 })();
+
+
+
+
+
+
 
 /**
  * $(document).ready wartet, bis die Seite komplett geladen wurde. Dann wird die
