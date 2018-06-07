@@ -22,26 +22,35 @@ var GeoTag = function (lat, lon, name, hashtag) {
 var ajax = new XMLHttpRequest();
 
 $("#tag-form button").on("click", function(event){
-    
-    ajax.open("POST", "/gta_v4/gta-server.js" , true);
+    ajax.open("POST", "/tagging" , true);
+    ajax.setRequestHeader("Content-Type", "JSON");
 
     var lat = $("#tag-latitude").val();
     var lon = $("#tag-longitude").val();
     var name = $("#tag-name").val();    
     var hashtag = $("#tag-hashtag").val();
 
-
-    ajax.send(new GeoTag(lat, lon, name, hashtag));
+    ajax.send(JSON.stringify(new GeoTag(lat, lon, name, hashtag)));
 
 
 });
 
 $("#filter-form button").on("click", function(event){
 
-    ajax.open("GET", "", true);
+    var latURL = "?lat="+$("#filter-latitude").val();
+    var lonURL = "?lon="+$("#filter-longitude").val();
+    var termURL = "?term="+$("#filter-search").val();
 
+    ajax.open("GET", "/discovery"+latURL+lonURL+termURL, true);
+    ajax.send(null);
 });
 
+ajax.onreadystatechange = function() {
+
+    if(ajax.readyState == 4 && ajax.status == 200){
+        //Discovery Einträge aktualisieren und Karte TODO
+    }
+}
 
 
 /**
