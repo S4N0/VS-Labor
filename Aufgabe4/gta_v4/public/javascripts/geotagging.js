@@ -23,7 +23,7 @@ var ajax = new XMLHttpRequest();
 
 $("#tag-form button").on("click", function(event){
     ajax.open("POST", "/tagging" , true);
-    ajax.setRequestHeader("Content-Type", "JSON");
+    ajax.setRequestHeader("Content-Type", "application/json");
 
     var lat = $("#tag-latitude").val();
     var lon = $("#tag-longitude").val();
@@ -38,17 +38,36 @@ $("#tag-form button").on("click", function(event){
 $("#filter-form button").on("click", function(event){
 
     var latURL = "?lat="+$("#filter-latitude").val();
-    var lonURL = "?lon="+$("#filter-longitude").val();
-    var termURL = "?term="+$("#filter-search").val();
+    var lonURL = "&lon="+$("#filter-longitude").val();
+    var termURL = "&term="+$("#filter-search").val();
 
     ajax.open("GET", "/discovery"+latURL+lonURL+termURL, true);
     ajax.send(null);
 });
 
+
+
 ajax.onreadystatechange = function() {
 
     if(ajax.readyState == 4 && ajax.status == 200){
         //Discovery Einträge aktualisieren und Karte TODO
+        console.log(ajax.responseText);
+        
+        //var resultArray = JSON.parse(ajax.responseText);
+        var resultArray = ajax.responseText;
+        var results = "";
+
+
+
+        for(tag of resultArray){
+            results += "<li>";
+            results += ("("+tag.latitude+"/"+tag.longitude+") "+tag.name+" "+tag.hashtag);
+            results += "</li>"
+        }
+
+        $("#results").empty()
+        $("#results").append(results);
+        
     }
 }
 

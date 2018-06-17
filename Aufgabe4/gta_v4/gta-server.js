@@ -21,6 +21,7 @@ app.use(logger('dev'));
 app.use(bodyParser.urlencoded({
     extended: false
 }));
+app.use(bodyParser.json());
 
 // Setze ejs als View Engine
 app.set('view engine', 'ejs');
@@ -102,9 +103,14 @@ var geoTagManager = (function () {
         },
 
         /* returns whole array for debugging */
-        get: function () {
-            return geoTagArray
+        getAll: function () {
+            return geoTagArray;
+        },
+
+        get: function(index){
+            return geoTagArray[index];
         }
+
 
 
     }
@@ -130,6 +136,25 @@ app.get('/', function (req, res) {
     });
 });
 
+
+//Server routes 
+
+//Routes to get a spezific container-ressource
+app.get('/geotags/:index',function(req, res){
+    var index = req.params.index;
+    res.json(geoTagManager.get(index));
+
+});
+
+app.get('/geotags', function(req, res){
+    res.json(geoTagManager.getAll());
+});
+
+app.post('/geotags', function(req, res){
+    geoTagManager.add();//TODO vgl. Route: /tagging
+    res.end();
+});
+
 //Debugging: geoTagManager.remove
 app.get('/del', function(req, res){
     var lat = req.body.latitude;
@@ -138,12 +163,12 @@ app.get('/del', function(req, res){
     console.log("Tag mit \'place\' wurde gelöscht");
     geoTagManager.removeByName("place");
     res.render('gta', {
-        taglist: geoTagManager.get(),
+        taglist: geoTagManager.getAll(),
         lat:000,
         lon:000,
         tags: "[]"
     });
-    console.log(geoTagManager.get());
+    console.log(geoTagManager.getAll());
 });
 
 /**
@@ -162,19 +187,22 @@ app.get('/del', function(req, res){
 // TODO: CODE ERGÄNZEN START (DONE)
 
 app.post('/tagging', function (req, res) {
-
+    geoTagManager.add(req.body);
+    res.end();
+    /*
     var lat = req.body.latitude;
     var lon = req.body.longitude;
     var stdRadius = 10;
 
-    geoTagManager.add(new GeoTag(lat, lon, req.body.name, req.body.hashtag));
 
+    
     res.render('gta', {
         taglist: geoTagManager.getByRadius(lat, lon, stdRadius),
         lat: lat,
         lon: lon,
         tags: JSON.stringify(geoTagManager.getByRadius(lat, lon, stdRadius))
     });
+    */
 });
 
 
@@ -192,27 +220,34 @@ app.post('/tagging', function (req, res) {
 
 // TODO: CODE ERGÄNZEN (DONE)
 
-app.post('/discovery', function (req, res) {
-    var term = req.body.searchterm;
+app.get('/discovery', function (req, res) {
     var stdRadius = 10;
-    var lat = req.body.hiddenLatitude;
-    var lon = req.body.hiddenLongitude;
+    var lat = req.query.lat;
+    var lon = req.query.lon;
+    var term = req.query.term;
+
 
 
     if (term !== "") {
+        /*
         res.render('gta', {
             taglist: geoTagManager.getByName(term),
             lat: lat,
             lon: lon,
             tags: JSON.stringify(geoTagManager.getByName(term))
         });
-    } else {
+        */
+        res.json(geoTagManager.getByName(term));
+    } else{
+        /*
         res.render('gta', {
             taglist: geoTagManager.getByRadius(lat, lon, stdRadius),
             lat: lat,
             lon: lon,
             tags: JSON.stringify(geoTagManager.getByRadius(lat, lon, stdRadius))
         });
+        */
+        res.json(geoTagManager.getByRadius(lat, lon, stdRadius));
     }
 
 });
