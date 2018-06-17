@@ -22,15 +22,16 @@ var GeoTag = function (lat, lon, name, hashtag) {
 var ajax = new XMLHttpRequest();
 
 $("#tag-form button").on("click", function(event){
-    ajax.open("POST", "/tagging" , true);
+    ajax.open("POST", "/geotags" , true);
     ajax.setRequestHeader("Content-Type", "application/json");
+    ajax.responseType = "json";
 
     var lat = $("#tag-latitude").val();
     var lon = $("#tag-longitude").val();
     var name = $("#tag-name").val();    
     var hashtag = $("#tag-hashtag").val();
 
-    ajax.send(JSON.stringify(new GeoTag(lat, lon, name, hashtag)));
+    ajax.send(JSON.stringify(new GeoTag(lat, lon, name, hashtag, 0)));
 
 
 });
@@ -41,33 +42,28 @@ $("#filter-form button").on("click", function(event){
     var lonURL = "&lon="+$("#filter-longitude").val();
     var termURL = "&term="+$("#filter-search").val();
 
-    ajax.open("GET", "/discovery"+latURL+lonURL+termURL, true);
+    ajax.open("GET", "/geotags"+latURL+lonURL+termURL, true);
+    ajax.responseType = "json";
     ajax.send(null);
 });
 
 
-
 ajax.onreadystatechange = function() {
 
-    if(ajax.readyState == 4 && ajax.status == 200){
-        //Discovery Einträge aktualisieren und Karte TODO
-        console.log(ajax.responseText);
-        
-        //var resultArray = JSON.parse(ajax.responseText);
-        var resultArray = ajax.responseText;
+    if(ajax.readyState == 4){
+        //Discovery Einträge aktualisieren und Karte
+        console.log(ajax.response);
+        var resultArray = ajax.response;
         var results = "";
 
-
-
-        for(tag of resultArray){
+        resultArray.forEach(function(tag){
             results += "<li>";
             results += ("("+tag.latitude+"/"+tag.longitude+") "+tag.name+" "+tag.hashtag);
-            results += "</li>"
-        }
+            results += "</li>";
+        });
 
-        $("#results").empty()
-        $("#results").append(results);
-        
+        $("#results").html(results);
+        gtaLocator.updateLocation();
     }
 }
 

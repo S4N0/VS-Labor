@@ -18,10 +18,10 @@ var app;
 app = express();
 //Middleware Funktionen, die für Aufrufe mit express oder bestimmte Direktiven benutzt werden können (Modularisierung von Funktionen)
 app.use(logger('dev'));
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: false
 }));
-app.use(bodyParser.json());
 
 // Setze ejs als View Engine
 app.set('view engine', 'ejs');
@@ -40,11 +40,12 @@ app.use(express.static(__dirname + "/public"));
  */
 
 // TODO: CODE ERGÄNZEN (DONE)
-var GeoTag = function (lat, lon, name, hashtag) {
+var GeoTag = function (lat, lon, name, hashtag, id) {
     this.latitude = lat;
     this.longitude = lon;
     this.name = name;
     this.hashtag = hashtag;
+    this.id = id;
 }
 
 /**
@@ -61,10 +62,12 @@ var GeoTag = function (lat, lon, name, hashtag) {
 var geoTagManager = (function () {
 
     var geoTagArray = [];
+    var idCounter = 0;
 
     return {
 
         add: function (tag) {
+            tag.id = idCounter++;
             geoTagArray.push(tag);
         },
 
@@ -107,6 +110,10 @@ var geoTagManager = (function () {
             return geoTagArray;
         },
 
+        getById: function(id){
+            return geoTagArray.filter(tag => tag.id == id);
+        },
+
         get: function(index){
             return geoTagArray[index];
         }
@@ -129,7 +136,7 @@ var geoTagManager = (function () {
 app.get('/', function (req, res) {
    
     res.render('gta', {
-        taglist: [],
+        taglist: geoTagManager.getAll(),
         lat: '',
         lon: '',
         tags: '[]'
@@ -140,19 +147,31 @@ app.get('/', function (req, res) {
 //Server routes 
 
 //Routes to get a spezific container-ressource
-app.get('/geotags/:index',function(req, res){
-    var index = req.params.index;
-    res.json(geoTagManager.get(index));
+app.get('/geotags/:id',function(req, res){
+    var id = req.params.id;
+    res.status(200).json(geoTagManager.getById(id));
 
 });
 
 app.get('/geotags', function(req, res){
-    res.json(geoTagManager.getAll());
+    var stdRadius = 10;
+    var lat = req.query.lat;
+    var lon = req.query.lon;
+    var term = req.query.term;
+
+    if(term == undefined){
+        res.status(200).json(geoTagManager.getAll());
+    } else if(term == ""){
+        res.status(200).json(geoTagManager.getByRadius(lat, lon, stdRadius));
+    } else {
+        res.status(200).json(geoTagManager.getByName(term));
+    }
 });
 
 app.post('/geotags', function(req, res){
-    geoTagManager.add();//TODO vgl. Route: /tagging
-    res.end();
+
+    geoTagManager.add(req.body);
+    res.status(201).json(geoTagManager.getAll());
 });
 
 //Debugging: geoTagManager.remove
@@ -188,13 +207,10 @@ app.get('/del', function(req, res){
 
 app.post('/tagging', function (req, res) {
     geoTagManager.add(req.body);
-    res.end();
-    /*
+    
     var lat = req.body.latitude;
     var lon = req.body.longitude;
     var stdRadius = 10;
-
-
     
     res.render('gta', {
         taglist: geoTagManager.getByRadius(lat, lon, stdRadius),
@@ -202,7 +218,8 @@ app.post('/tagging', function (req, res) {
         lon: lon,
         tags: JSON.stringify(geoTagManager.getByRadius(lat, lon, stdRadius))
     });
-    */
+    
+    res.end();
 });
 
 
@@ -220,34 +237,29 @@ app.post('/tagging', function (req, res) {
 
 // TODO: CODE ERGÄNZEN (DONE)
 
-app.get('/discovery', function (req, res) {
+app.post('/discovery', function (req, res) {
     var stdRadius = 10;
     var lat = req.query.lat;
     var lon = req.query.lon;
     var term = req.query.term;
 
-
-
     if (term !== "") {
-        /*
+        
         res.render('gta', {
             taglist: geoTagManager.getByName(term),
             lat: lat,
             lon: lon,
             tags: JSON.stringify(geoTagManager.getByName(term))
         });
-        */
-        res.json(geoTagManager.getByName(term));
+        
     } else{
-        /*
+        
         res.render('gta', {
             taglist: geoTagManager.getByRadius(lat, lon, stdRadius),
             lat: lat,
             lon: lon,
             tags: JSON.stringify(geoTagManager.getByRadius(lat, lon, stdRadius))
         });
-        */
-        res.json(geoTagManager.getByRadius(lat, lon, stdRadius));
     }
 
 });
