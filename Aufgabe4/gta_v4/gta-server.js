@@ -143,16 +143,14 @@ app.get('/', function (req, res) {
     });
 });
 
-
-//Server routes 
-
-//Routes to get a spezific container-ressource
+//Route to get a spezific container-ressource
 app.get('/geotags/:id',function(req, res){
     var id = req.params.id;
     res.status(200).json(geoTagManager.getById(id));
 
 });
 
+//Route to get geotags by Searchterm, by radius or all
 app.get('/geotags', function(req, res){
     var stdRadius = 10;
     var lat = req.query.lat;
@@ -168,6 +166,7 @@ app.get('/geotags', function(req, res){
     }
 });
 
+//Route to add new Geotag
 app.post('/geotags', function(req, res){
 
     geoTagManager.add(req.body);

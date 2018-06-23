@@ -21,6 +21,7 @@ var GeoTag = function (lat, lon, name, hashtag) {
 
 var ajax = new XMLHttpRequest();
 
+//Tagging Submmit-button
 $("#tag-form button").on("click", function(event){
     ajax.open("POST", "/geotags" , true);
     ajax.setRequestHeader("Content-Type", "application/json");
@@ -31,11 +32,12 @@ $("#tag-form button").on("click", function(event){
     var name = $("#tag-name").val();    
     var hashtag = $("#tag-hashtag").val();
 
-    ajax.send(JSON.stringify(new GeoTag(lat, lon, name, hashtag, 0)));
+    ajax.send(JSON.stringify(new GeoTag(lat, lon, name, hashtag)));
 
 
 });
 
+//Discovery Search-Button
 $("#filter-form button").on("click", function(event){
 
     var latURL = "?lat="+$("#filter-latitude").val();
@@ -47,18 +49,17 @@ $("#filter-form button").on("click", function(event){
     ajax.send(null);
 });
 
-
+//Refreshing result list and map
 ajax.onreadystatechange = function() {
 
     if(ajax.readyState == 4){
-        //Discovery Einträge aktualisieren und Karte
         console.log(ajax.response);
         var resultArray = ajax.response;
         var results = "";
 
         resultArray.forEach(function(tag){
             results += "<li>";
-            results += ("("+tag.latitude+"/"+tag.longitude+") "+tag.name+" "+tag.hashtag);
+            results += (tag.name+" ("+tag.latitude+", "+tag.longitude+") "+tag.hashtag);
             results += "</li>";
         });
 
